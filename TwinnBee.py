@@ -46,7 +46,7 @@ class Game:
         self.backgroundSpeed=bgSpeed
         self.bullets=[]
         self.clouds=[]
-        self.powerUps=[]
+        self.bells=[]
 
     def createPlayer(self, img, pSpeed):
         self.player = Player(img,pSpeed)
@@ -92,13 +92,13 @@ class Game:
     def drawBells(self):
         i=0
         bellRemove=-1
-        for bell in self.powerUps:
+        for bell in self.bells:
             bell.move()
             if bell.ycoor > wallBottom:
                 bellRemove=i
             i+=1
         if bellRemove >-1:
-            self.powerUps.pop(bellRemove)
+            self.bells.pop(bellRemove)
 
 
     def collision_bullet_cloud(self):
@@ -111,13 +111,19 @@ class Game:
                     bullet.ycoor>cloud.ycoor and\
                     bullet.xcoor+bullet.img.get_width()/2 > cloud.xcoor+cloudOffset and\
                     bullet.xcoor+bullet.img.get_width()/2 < cloud.xcoor+cloud.width-cloudOffset:
-                    self.powerUps.insert(0,PowerUp(bellImage,cloud.xcoor+cloud.width/2-bellImage.get_width()/2,cloud.ycoor,bellSpeedInitial))
+                    self.bells.insert(0,Bell(bellImage,cloud.xcoor+cloud.width/2-bellImage.get_width()/2,cloud.ycoor,bellSpeedInitial))
                     bulletRemove = i
                     cloud.hasBell=False
                 i+=1
             if bulletRemove >-1:
                 self.bullets.pop(bulletRemove)
-
+    def collision_bullet_bell(self):
+        for bell in self.bells:
+            for bullet in self.bullets:
+                if bullet.ycoor > bell.ycoor and bullet.ycoor < bell.ycoor + bell.height and\
+                    bullet.xcoor >bell.xcoor and bullet.xcoor <bell.xcoor+bell.width:
+                    bell.speed=bellSpeedInitial
+                    bell.move()
 
 class Player:
     def __init__(self, img, speed):
@@ -181,7 +187,7 @@ class Cloud:
         self.ycoor +=self.speed
         window.blit(self.img,(self.xcoor,self.ycoor))
 
-class PowerUp:
+class Bell:
     def __init__(self,bellImage,xcoor,ycoor,bellSpeed):
         self.img=bellImage
         self.xcoor= xcoor
@@ -251,6 +257,7 @@ while(True):
     gameInstance.drawClouds()
     gameInstance.drawBells()
     gameInstance.collision_bullet_cloud()
+    gameInstance.collision_bullet_bell()
     player.move()
     gameInstance.drawDelay(player)
     
