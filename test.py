@@ -93,68 +93,67 @@ class Game:
                 cloud.xcoor = random.randint(wallLeft+windowWidth/8 -cloudImage.get_width(), wallRight-windowWidth/8)
                 cloud.speed = cloudSpeed + random.uniform(0,cloudSpeed)
                 cloud.hasBell = True
-
     def drawBells(self):
-        i=0
-        bellRemove=-1
         for bell in self.bells:
             bell.move()
-            if bell.ycoor > wallBottom:
-                bellRemove=i
-            i+=1
-        if bellRemove >-1:
-            self.bells.pop(bellRemove)
-
+        #     i=0
+        #     bellRemove =-1
+        #     if bell.ycoor > wallBottom:
+        #         bellRemove= i
+        #         i+=1
+        # # if bellRemove >-1:
+            #self.bells.pop(bellRemove)
+ 
 
     def collision_bullet_cloud(self):
         for cloud in self.clouds:
-            i=0
-            bulletRemove = -1
+           # i=0
+           # bulletRemove = -1
             for bullet in self.bullets:
                 if cloud.hasBell and\
-                    bullet.ycoor<cloud.ycoor+cloud.height and\
-                    bullet.ycoor>cloud.ycoor and\
+                    bullet.ycoor<cloud.ycoor+cloud.height and bullet.ycoor>cloud.ycoor and\
                     bullet.xcoor+bullet.img.get_width()/2 > cloud.xcoor+cloudOffset and\
                     bullet.xcoor+bullet.img.get_width()/2 < cloud.xcoor+cloud.width-cloudOffset:
                     self.bells.insert(0,Bell(bellImage,cloud.xcoor+cloud.width/2-bellImage.get_width()/2,cloud.ycoor,bellSpeedInitial))
-                    bulletRemove = i
-                    cloud.hasBell=False
-                i+=1
-            if bulletRemove >-1:
-                self.bullets.pop(bulletRemove)
-    def collision_bullet_bell(self): # bell bounces when hit by the bullet
-        for bell in self.bells:
-            counter =0
-            i=0
-            bulletRemove = -1
-            for bullet in self.bullets:
-                if bullet.ycoor > bell.ycoor and bullet.ycoor < bell.ycoor + bell.height and\
-                    bullet.xcoor+bullet.img.get_width()/2 >bell.xcoor and bullet.xcoor+bullet.img.get_width()/2<bell.xcoor+bell.width:
-                    bell.speed=bellSpeedInitial
-                    bell.move()
-                    bulletRemove =i
-                    counter +=1
-                    # if counter == 3 :
-                    #     bell.changeColor(BLUE)
-                    # if counter == 6:
-                    #     bell.changeColor(WHITE)
-                    # if counter == 9:
-                    #     bell.changeColor(RED)
-                i+=1
-            if bulletRemove >-1:
-                self.bullets.pop(bulletRemove)            
-    def collision_player_bell(self): # player scores bell 
-        score =0
-        i=0
-        bellRemove = -1
-        for bell in self.bells:
-            if bell.ycoor > player.ycoor  and\
-                bell.xcoor >player.xcoor and bell.xcoor+bell.width <player.xcoor+player.img.get_width():
-                score +=1
-                bellRemove =i
-            i+=1
-        if bellRemove >-1:
-            self.bells.pop(bellRemove)          
+                    self.drawBells()
+                    #bulletRemove = i
+               # cloud.hasBell=False
+                #i+=1
+               # if bulletRemove >-1:
+                #    self.bullets.pop(bulletRemove)
+    # def collision_bullet_bell(self): # bell bounces when hit by the bullet
+    #     for bell in self.bells:
+    #        # counter =0
+    #         #i=0
+    #         #bulletRemove = -1
+    #         for bullet in self.bullets:
+    #             if bullet.ycoor > bell.ycoor and bullet.ycoor < bell.ycoor + bell.height and\
+    #                 bullet.xcoor + bullet.img.get_width()/2 > bell.xcoor and bullet.xcoor+bullet.img.get_width()/2 < bell.xcoor+bell.width:
+    #                 bell.speed=bellSpeedInitial
+    #                 bell.move()
+            #         bulletRemove =i
+            #         counter +=1
+            #         if counter == 3 :
+            #             bell.changeColor(BLUE)
+            #         if counter == 6:
+            #             bell.changeColor(WHITE)
+            #         if counter == 9:
+            #             bell.changeColor(RED)
+            #     i+=1
+            # if bulletRemove >-1:
+            #     self.bullets.pop(bulletRemove)            
+    # def collision_player_bell(self): # player scores bell 
+    #     score =0
+    #     i=0
+    #     bellRemove = -1
+    #     for bell in self.bells:
+    #         if bell.ycoor > player.ycoor  and\
+    #             bell.xcoor >player.xcoor and bell.width <player.xcoor+player.img.get_width():
+    #             score +=500
+    #             bellRemove =i
+    #         i+=1
+    #     if bellRemove >-1:
+    #         self.bells.pop(bellRemove)          
 
 class Player:
     def __init__(self, img, speed):
@@ -290,12 +289,15 @@ while(True):
     gameInstance.drawBackground()
     gameInstance.drawBullets()
     gameInstance.drawClouds()
-    gameInstance.drawBells()
+ 
     gameInstance.collision_bullet_cloud()
-    gameInstance.collision_bullet_bell()
-    gameInstance.collision_player_bell()
-    player.move()
+    gameInstance.drawBells()
+    #gameInstance.collision_bullet_bell()
+   
+    #gameInstance.collision_player_bell()
     
+    player.move()
+
     gameInstance.drawDelay(player)
     
     pygame.display.update()
